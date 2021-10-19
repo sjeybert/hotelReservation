@@ -4,29 +4,41 @@ import model.Customer;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 
 public class CustomerService {
+
+    private static CustomerService customerService ;
 
     private CustomerService()
     {
 
     }
 
-    public static Map<String,Customer> customers = new HashMap<>();
+    public static CustomerService getInstanceOfCustomerService()
+    {
+        if(customerService == null)
+        {
+            customerService = new CustomerService();
+        }
+        return customerService ;
+    }
+
+    private HashMap<String,Customer> customers = new HashMap<String,Customer>();
 
     public void addCustomer(String email, String firstName, String lastName)
     {
         customers.put(email,new Customer(firstName,lastName,email)) ;
     }
 
-    public static Customer getCustomer(String customerEmail)
+    public Customer getCustomer(String customerEmail)
     {
         return customers.get(customerEmail) ;
     }
 
-    public static Collection getAllCustomer()
+    public Collection getAllCustomer()
     {
         return customers.values();
     }
+
+    public HashMap<String,Customer> getCustomerMap() {return customers;} ;
 }

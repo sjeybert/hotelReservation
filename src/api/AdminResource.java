@@ -9,11 +9,13 @@ import java.util.Collection;
 import java.util.List;
 
 public class AdminResource {
+    static CustomerService customerServiceSingeton = CustomerService.getInstanceOfCustomerService() ;
+    static ReservationService reservationServiceSingeton = ReservationService.getInstanceOfReservationService() ;
     // Return Customer
     public Customer getCustomer(String email)
     {
-        if(CustomerService.customers.containsKey(email)) {
-            return CustomerService.customers.get(email);
+        if(customerServiceSingeton.getCustomerMap().containsKey(email)) {
+            return customerServiceSingeton.getCustomerMap().get(email);
         }
         return null;
     }
@@ -22,22 +24,22 @@ public class AdminResource {
     {
        for(IRoom room : rooms)
        {
-           ReservationService.rooms.put(room.getRoomNumber(),room);
+           reservationServiceSingeton.getAllRooms().put(room.getRoomNumber(),room);
        }
     }
     // Return all added rooms
     public Collection<IRoom> getAllRooms()
     {
-        return ReservationService.rooms.values() ;
+        return reservationServiceSingeton.getAllRooms().values() ;
     }
     // Return all added customers
     public Collection<Customer> getAllCustomers()
     {
-        return CustomerService.customers.values() ;
+        return customerServiceSingeton.getCustomerMap().values() ;
     }
     // Print all reservations in console
     public void displayAllReservations()
     {
-        ReservationService.printAllReservation();
+        reservationServiceSingeton.printAllReservation();
     }
 }

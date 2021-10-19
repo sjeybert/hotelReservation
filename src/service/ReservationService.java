@@ -7,10 +7,23 @@ import model.Reservation;
 import java.util.*;
 
 public class ReservationService {
-    public static Map<String,IRoom> rooms = new HashMap<>();
-    public static Map<String,ArrayList<Reservation>> reservations = new HashMap<>();
+    private static ReservationService reservationService ;
+    private ReservationService()
+    {
 
-    public static void addRoom(IRoom room)
+    }
+    public static ReservationService getInstanceOfReservationService()
+    {
+        if(reservationService == null)
+        {
+            reservationService = new ReservationService();
+        }
+        return reservationService ;
+    }
+    private HashMap<String,IRoom> rooms = new HashMap<>();
+    private HashMap<String,ArrayList<Reservation>> reservations = new HashMap<>();
+
+    public void addRoom(IRoom room)
     {
     rooms.put(room.getRoomNumber(),room) ;
     }
@@ -20,7 +33,7 @@ public class ReservationService {
         return rooms.get(roomId);
     }
 
-    public static Reservation reserveRoom(Customer customer, IRoom room, Date checkInDate, Date checkOutDate)
+    public Reservation reserveRoom(Customer customer, IRoom room, Date checkInDate, Date checkOutDate)
     {
 
             Reservation newReservation = new Reservation(customer, room, checkInDate, checkOutDate);
@@ -40,7 +53,7 @@ public class ReservationService {
         return newReservation;
     }
 
-    public static Collection<IRoom> findRooms(Date checkInDate, Date checkOutDate)
+    public Collection<IRoom> findRooms(Date checkInDate, Date checkOutDate)
     {
         HashSet<IRoom> availableRooms = new HashSet<>();
         HashSet<IRoom> roomsInReservationData = new HashSet<>();
@@ -70,16 +83,13 @@ public class ReservationService {
         availableRooms.removeAll(temp);
         temp.clear();
         temp.addAll(rooms.values());
-//        System.out.println("temp - " + temp);
         temp.removeAll(roomsInReservationData);
-//        System.out.println("temp " + temp + "rr " + roomsInReservationData );
         availableRooms.addAll(temp) ;
-//        System.out.println("ar "  + availableRooms);
         return availableRooms ;
 
     }
 
-    public static Collection<Reservation> getCustomersReservation(Customer customer)
+    public Collection<Reservation> getCustomersReservation(Customer customer)
     {
         if(reservations.containsKey(customer.getEmail()))
         {
@@ -88,10 +98,14 @@ public class ReservationService {
         return null;
     }
 
-    public static void printAllReservation()
+    public void printAllReservation()
     {
         System.out.println(reservations);
     }
+
+    public HashMap<String,IRoom> getAllRooms() {return this.rooms ;}
+
+    public HashMap<String,ArrayList<Reservation>> getAllReservations() {return this.reservations ;}
 
 
 }

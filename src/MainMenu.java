@@ -13,9 +13,11 @@ public class MainMenu {
     static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     public static Scanner scanner = new Scanner(System.in);
     static int userInput;
+    static CustomerService customerServiceSingeton = CustomerService.getInstanceOfCustomerService() ;
+    static ReservationService reservationServiceSingeton = ReservationService.getInstanceOfReservationService() ;
 
     static void init() {
-        String mainMenu = "1. Find and reserve a Room\n2. See my reservations\n3. Create an account\n4. Admin\n5. Exit";
+        String mainMenu = "=========================\n1. Find and reserve a Room\n2. See my reservations\n3. Create an account\n4. Admin\n5. Exit\n=========================";
         while (userInput != 5) {
             System.out.println(mainMenu);
             try {
@@ -62,7 +64,7 @@ public class MainMenu {
                                 System.out.println("Check-Out Date should come after Check-In date");
                                 break;
                             }
-                            availableRooms = ReservationService.findRooms(checkInDate, checkOutDate);
+                            availableRooms = reservationServiceSingeton.findRooms(checkInDate, checkOutDate);
                             if (availableRooms.size() == 0) {
                                 System.out.println("No matches found");
                                 // Using calendar
@@ -78,8 +80,7 @@ public class MainMenu {
                                 // Update checkIn date
                                 checkOutDate = cal.getTime() ;
 
-                                availableRooms = ReservationService.findRooms(checkInDate, checkOutDate);
-                                System.out.println("##IN-" + checkInDate + " OUT-" + checkOutDate + " AVAI- " + availableRooms);
+                                availableRooms = reservationServiceSingeton.findRooms(checkInDate, checkOutDate);
                                 if (availableRooms.size() == 0) {
                                     System.out.println("No Recommendation found");
                                     break;
@@ -114,11 +115,11 @@ public class MainMenu {
                                                 System.out.println("Invalid Email ID, Try again");
                                             }
                                         }
-                                        if (CustomerService.customers.containsKey(emailID)) {
-                                            customer = CustomerService.getCustomer(emailID);
+                                        if (customerServiceSingeton.getCustomerMap().containsKey(emailID)) {
+                                            customer = customerServiceSingeton.getCustomer(emailID);
                                             if(customer != null && customerPreferredRoom != null && checkInDate != null && checkOutDate != null) {
                                                 System.out.println("***SUCCESS***");
-                                                System.out.println(ReservationService.reserveRoom(customer, customerPreferredRoom, checkInDate, checkOutDate));
+                                                System.out.println(reservationServiceSingeton.reserveRoom(customer, customerPreferredRoom, checkInDate, checkOutDate));
                                             }
                                             else
                                             {
@@ -151,12 +152,12 @@ public class MainMenu {
                         System.out.println("Enter Email ID");
                         emailID = scanner.nextLine();
                         if (Customer.isValidEmail(emailID)) {
-                            if (CustomerService.customers.containsKey(emailID)) {
-                                customer = CustomerService.getCustomer(emailID);
-                                if (ReservationService.getCustomersReservation(customer) == null) {
+                            if (customerServiceSingeton.getCustomerMap().containsKey(emailID)) {
+                                customer = customerServiceSingeton.getCustomer(emailID);
+                                if (reservationServiceSingeton.getCustomersReservation(customer) == null) {
                                     System.out.println("No data found");
                                 } else {
-                                    System.out.println(ReservationService.getCustomersReservation(customer));
+                                    System.out.println(reservationServiceSingeton.getCustomersReservation(customer));
                                 }
                             } else {
                                 System.out.println("Account not found!");
@@ -205,6 +206,7 @@ public class MainMenu {
                     }
                     case 5: {
                         userInput = 5;
+                        System.out.println("***** THANK YOU *****");
                         break;
                     }
                     default:

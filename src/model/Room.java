@@ -2,6 +2,8 @@ package model;
 
 import service.ReservationService;
 
+import java.util.Objects;
+
 public class Room implements IRoom{
 
     private String roomNumber ;
@@ -40,9 +42,22 @@ public class Room implements IRoom{
         return this.getRoomNumber() + " - "+ this.getRoomType() + " - " + this.getRoomPrice() + "$" ;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Room room = (Room) o;
+        return roomNumber.equals(room.roomNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(roomNumber);
+    }
+
     public static boolean checkRoomNumberAvailability(String roomNumber)
     {
-        if(ReservationService.rooms.containsKey(roomNumber))
+        if(ReservationService.getInstanceOfReservationService().getAllRooms().containsKey(roomNumber))
             return true ;
         else
             return false ;

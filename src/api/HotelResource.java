@@ -10,46 +10,47 @@ import java.util.Collection;
 import java.util.Date;
 
 public class HotelResource {
-
+    static CustomerService customerServiceSingeton = CustomerService.getInstanceOfCustomerService() ;
+    static ReservationService reservationServiceSingeton = ReservationService.getInstanceOfReservationService() ;
     // Return customer object
     public Customer getCustomer(String email)
     {
-        if(CustomerService.customers.containsKey(email)) {
-            return CustomerService.customers.get(email);
+        if(customerServiceSingeton.getCustomerMap().containsKey(email)) {
+            return customerServiceSingeton.getCustomerMap().get(email);
         }
         return null;
     }
     // Create customer
     public static void createACustomer(String email, String firstName, String lastName)
     {
-        CustomerService.customers.put(email,new Customer(firstName, lastName, email));
+        customerServiceSingeton.getCustomerMap().put(email,new Customer(firstName, lastName, email));
     }
     // Return room object by referring room number
     public IRoom getRoom(String roomNumber)
     {
-        if(ReservationService.rooms.containsKey(roomNumber))
+        if(reservationServiceSingeton.getAllRooms().containsKey(roomNumber))
         {
-            return ReservationService.rooms.get(roomNumber);
+            return reservationServiceSingeton.getAllRooms().get(roomNumber);
         }
         return null;
     }
     // New Reservation
     public Reservation bookARoom(String customerEmail, IRoom room, Date checkInDate, Date checkOutDate)
     {
-        return new ReservationService().reserveRoom(getCustomer(customerEmail),room, checkInDate, checkOutDate) ;
+        return reservationServiceSingeton.reserveRoom(getCustomer(customerEmail),room, checkInDate, checkOutDate) ;
     }
     // Return customer's Reservation
     public Collection<Reservation> getCustomerReservations(String customerEmail)
     {
-        if(ReservationService.reservations.containsKey(customerEmail))
+        if(reservationServiceSingeton.getAllReservations().containsKey(customerEmail))
         {
-            return  ReservationService.reservations.get(customerEmail);
+            return reservationServiceSingeton.getAllReservations().get(customerEmail);
         }
         return null;
     }
     // Find available room based on given dates
     public Collection<IRoom> findARoom(Date checkIn, Date checkOut)
     {
-        return new ReservationService().findRooms(checkIn, checkOut) ;
+        return reservationServiceSingeton.findRooms(checkIn, checkOut) ;
     }
 }

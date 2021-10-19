@@ -8,8 +8,9 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class AdminMenu {
+    static ReservationService reservationServiceSingeton = ReservationService.getInstanceOfReservationService() ;
     static int adminInput ;
-    static String adminMenu = "1. See all Customers\n2. See all Rooms\n3. See all Reservations\n4. Add a Room\n5. Back to Main Menu";
+    static String adminMenu = "=========================\n1. See all Customers\n2. See all Rooms\n3. See all Reservations\n4. Add a Room\n5. Back to Main Menu\n=========================";
     static void init(Scanner scanner)
     {
         System.out.println(adminMenu);
@@ -26,7 +27,7 @@ public class AdminMenu {
                     break;
                 }
                 case 3: {
-                    ReservationService.printAllReservation();
+                    reservationServiceSingeton.printAllReservation();
                     break;
                 }
                 case 4: {
@@ -52,7 +53,7 @@ public class AdminMenu {
     }
 
     private static void seeAllRooms() {
-        System.out.println(ReservationService.rooms.values());
+        System.out.println(reservationServiceSingeton.getAllRooms().values());
     }
 
     private static void addARoom(Scanner scanner) {
@@ -132,13 +133,13 @@ public class AdminMenu {
                     type = RoomType.DOUBLE ;
                 }
             }
-            ReservationService.addRoom(new Room(roomNumber, roomPrice, type));
+            reservationServiceSingeton.addRoom(new Room(roomNumber, roomPrice, type));
         }
 
     }
 
 
     private static void seeAllCustomers() {
-        System.out.println(CustomerService.getAllCustomer());
+        System.out.println(CustomerService.getInstanceOfCustomerService().getAllCustomer());
     }
 }
